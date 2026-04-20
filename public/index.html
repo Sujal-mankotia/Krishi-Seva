@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a3d2b" />
+  <title>KrishiSeva - Agricultural Data Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+    <div class="bg-grid"></div>
+
+    <nav>
+      <a class="nav-brand" href="#" aria-label="KrishiSeva home">
+        <span class="leaf">&#127807;</span>
+        <span>KrishiSeva</span>
+      </a>
+
+      <div class="nav-links">
+        <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
+        <button onclick="showPage('farmers', this)">Farmers</button>
+        <button onclick="showPage('land', this)">Land Records</button>
+        <button onclick="showPage('schemes', this)">Schemes</button>
+        <button onclick="showPage('reports', this)">Reports</button>
+      </div>
+
+      <div class="nav-right">
+        <div class="nav-presence">
+          <span class="presence-dot"></span>
+          <span id="liveClock">Syncing...</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb"></span>
+          </span>
+          <span class="theme-toggle-label">Dark mode</span>
+        </button>
+        <div class="badge-user" title="Admin">AD</div>
+      </div>
+    </nav>
+
+    <div id="toast" aria-live="polite">Record saved successfully!</div>
+
+    <main>
+      <!-- ═══════════════ DASHBOARD ═══════════════ -->
+      <section id="page-dashboard" class="page active">
+        <div class="hero-strip reveal">
+          <div class="hero-copy">
+            <div class="eyebrow">State agriculture operations</div>
+            <div class="hero-title">Agricultural Data Management System</div>
+            <div class="hero-sub">
+              Digitizing farmer and land records, streamlining scheme access, and surfacing district-level insights in one place.
+            </div>
+            <div class="hero-insights">
+              <div class="hero-chip">
+                <span class="hero-chip-label">Coverage</span>
+                <strong>8 districts live</strong>
+              </div>
+              <div class="hero-chip">
+                <span class="hero-chip-label">Verification Queue</span>
+                <strong>26 pending reviews</strong>
+              </div>
+              <div class="hero-chip">
+                <span class="hero-chip-label">Field Sync</span>
+                <strong>14 updates today</strong>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-amber" onclick="showPage('farmers', document.querySelector('.nav-links button:nth-child(2)'))">+ Register Farmer</button>
+              <button class="btn btn-secondary hero-ghost" onclick="showPage('schemes', document.querySelector('.nav-links button:nth-child(4)'))">View Schemes</button>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <div class="panel-label">Weekly operations pulse</div>
+            <div class="hero-kpi">
+              <span>Approvals completed</span>
+              <strong data-count="94">94</strong>
+            </div>
+            <div class="mini-bars">
+              <span style="height: 42%"></span>
+              <span style="height: 58%"></span>
+              <span style="height: 74%"></span>
+              <span style="height: 51%"></span>
+              <span style="height: 82%"></span>
+              <span style="height: 66%"></span>
+              <span style="height: 90%"></span>
+            </div>
+            <p>Higher activity this week from Nagpur, Pune, and Nashik clusters.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card reveal">
+            <div class="stat-icon">FR</div>
+            <div class="stat-label">Registered Farmers</div>
+            <div class="stat-value" id="stat-farmers" data-count="0">0</div>
+            <div class="stat-change">Up 38 this month</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon">LP</div>
+            <div class="stat-label">Land Parcels</div>
+            <div class="stat-value" id="stat-land-parcels" data-count="0">0</div>
+            <div class="stat-change">Hectares recorded</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon">SC</div>
+            <div class="stat-label">Active Schemes</div>
+            <div class="stat-value" id="stat-active-schemes" data-count="0">0</div>
+            <div class="stat-change">2 new this quarter</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon">BN</div>
+            <div class="stat-label">Beneficiaries Enrolled</div>
+            <div class="stat-value" id="stat-beneficiaries" data-count="0">0</div>
+            <div class="stat-change">Scheme enrollments</div>
+          </div>
+        </div>
+
+        <div class="two-col section-gap">
+          <div class="card reveal">
+            <div class="card-header">
+              <div class="card-title">Recent Farmer Registrations</div>
+              <button class="btn btn-sm btn-secondary" onclick="showPage('farmers', document.querySelector('.nav-links button:nth-child(2)'))">View All</button>
+            </div>
+            <table class="recent-table">
+              <thead>
+                <tr>
+                  <th>Farmer Name</th>
+                  <th>District</th>
+                  <th>Land (Ha)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="4" style="text-align:center;opacity:.5;padding:1rem;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card reveal">
+            <div class="card-header">
+              <div class="card-title">Recent Activity</div>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot dot-green"></div>
+                <div>
+                  <div class="activity-text">Loading recent activity...</div>
+                  <div class="activity-time"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ FARMERS ═══════════════ -->
+      <section id="page-farmers" class="page">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('farmers', 'tab-register', this)">Register Farmer</button>
+          <button class="tab-btn" onclick="switchTab('farmers', 'tab-list', this)">Farmer List</button>
+        </div>
+
+        <div id="tab-register" class="tab-content active">
+          <div class="stepper" id="reg-stepper">
+            <div class="step-item active" data-step="1">
+              <div class="step-circle">1</div>
+              <div class="step-label">Personal Info</div>
+            </div>
+            <div class="step-item" data-step="2">
+              <div class="step-circle">2</div>
+              <div class="step-label">Land Details</div>
+            </div>
+            <div class="step-item" data-step="3">
+              <div class="step-circle">3</div>
+              <div class="step-label">Bank and Docs</div>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div id="step-1" class="step-form active">
+            <div class="form-card reveal">
+              <div class="form-section-title">Personal Information</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>First Name <span class="required-star">*</span></label>
+                  <input type="text" id="firstName" placeholder="e.g. Ramesh" />
+                </div>
+                <div class="form-group">
+                  <label>Last Name <span class="required-star">*</span></label>
+                  <input type="text" id="lastName" placeholder="e.g. Kumar" />
+                </div>
+                <div class="form-group">
+                  <label>Date of Birth</label>
+                  <input type="date" id="dob" />
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <select id="gender">
+                    <option value="">Select</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Aadhaar Number <span class="required-star">*</span></label>
+                  <input type="text" id="aadhaar" placeholder="XXXX XXXX XXXX" maxlength="14" />
+                </div>
+                <div class="form-group">
+                  <label>Mobile Number</label>
+                  <input type="text" id="mobile" placeholder="+91 XXXXX XXXXX" maxlength="13" />
+                </div>
+                <div class="form-group">
+                  <label>Caste Category</label>
+                  <select id="caste">
+                    <option value="">Select</option>
+                    <option>General</option>
+                    <option>OBC</option>
+                    <option>SC</option>
+                    <option>ST</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Annual Income (Rs.)</label>
+                  <input type="number" id="income" placeholder="e.g. 120000" />
+                </div>
+                <div class="form-group span2">
+                  <label>Village / Town</label>
+                  <input type="text" id="village" placeholder="Village or locality name" />
+                </div>
+                <div class="form-group">
+                  <label>District <span class="required-star">*</span></label>
+                  <select id="district">
+                    <option value="">Select District</option>
+                    <option>Nagpur</option>
+                    <option>Pune</option>
+                    <option>Nashik</option>
+                    <option>Amravati</option>
+                    <option>Kolhapur</option>
+                    <option>Aurangabad</option>
+                    <option>Latur</option>
+                    <option>Solapur</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>State</label>
+                  <select id="state">
+                    <option>Maharashtra</option>
+                    <option>Madhya Pradesh</option>
+                    <option>Uttar Pradesh</option>
+                    <option>Punjab</option>
+                    <option>Haryana</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" onclick="nextStep(2)">Next: Land Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="step-2" class="step-form">
+            <div class="form-card reveal">
+              <div class="form-section-title">Land Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Survey / Khasra Number</label>
+                  <input type="text" id="surveyNo" placeholder="e.g. 142/A" />
+                </div>
+                <div class="form-group">
+                  <label>Total Area (Hectares)</label>
+                  <input type="number" id="landArea" placeholder="e.g. 4.5" step="0.1" />
+                </div>
+                <div class="form-group">
+                  <label>Land Type</label>
+                  <select id="landType">
+                    <option value="">Select</option>
+                    <option>Irrigated</option>
+                    <option>Rain-fed</option>
+                    <option>Dry Land</option>
+                    <option>Fallow</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Soil Type</label>
+                  <select id="soilType">
+                    <option value="">Select</option>
+                    <option>Black Cotton</option>
+                    <option>Red Laterite</option>
+                    <option>Alluvial</option>
+                    <option>Sandy Loam</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Primary Crop</label>
+                  <input type="text" id="crop" placeholder="e.g. Soybean, Wheat" />
+                </div>
+                <div class="form-group">
+                  <label>Ownership Type</label>
+                  <select id="ownership">
+                    <option value="">Select</option>
+                    <option>Owned</option>
+                    <option>Leased</option>
+                    <option>Sharecropped</option>
+                  </select>
+                </div>
+                <div class="form-group span2">
+                  <label>Location / Notes</label>
+                  <input type="text" id="landNotes" placeholder="Additional land details or GPS coordinates" />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-secondary" onclick="nextStep(1)">Back</button>
+                <button class="btn btn-primary" onclick="nextStep(3)">Next: Bank and Docs</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div id="step-3" class="step-form">
+            <div class="form-card reveal">
+              <div class="form-section-title">Bank and Document Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Bank Account Number</label>
+                  <input type="text" id="bankAccNo" placeholder="Account number" />
+                </div>
+                <div class="form-group">
+                  <label>IFSC Code</label>
+                  <input type="text" id="ifsc" placeholder="e.g. SBIN0001234" />
+                </div>
+                <div class="form-group">
+                  <label>Bank Name</label>
+                  <input type="text" id="bankName" placeholder="e.g. State Bank of India" />
+                </div>
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" id="bankBranch" placeholder="Branch name" />
+                </div>
+                <div class="form-group span2">
+                  <label>Document Status</label>
+                  <select id="docStatus">
+                    <option>All Documents Submitted</option>
+                    <option>Aadhaar Pending</option>
+                    <option>Land Record Pending</option>
+                    <option>Bank Details Pending</option>
+                  </select>
+                </div>
+              </div>
+              <div class="alert alert-warning">Please ensure all Aadhaar and land ownership documents are verified before final submission.</div>
+              <div class="form-actions">
+                <button class="btn btn-secondary" onclick="nextStep(2)">Back</button>
+                <button class="btn btn-primary" onclick="submitFarmer()">Submit Registration</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Farmer List Tab -->
+        <div id="tab-list" class="tab-content">
+          <div class="search-bar">
+            <div class="search-icon" style="flex: 1">
+              <input type="text" id="farmerSearch" placeholder="Search by name, district or Aadhaar..." oninput="filterFarmers()" />
+            </div>
+            <select id="districtFilter" onchange="filterFarmers()">
+              <option value="">All Districts</option>
+              <option>Nagpur</option>
+              <option>Pune</option>
+              <option>Nashik</option>
+              <option>Amravati</option>
+              <option>Kolhapur</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="showPage('farmers', document.querySelector('.nav-links button:nth-child(2)')); switchTab('farmers', 'tab-register', document.querySelector('.tab-btn'))">+ Add New</button>
+          </div>
+          <div class="data-table-wrap reveal">
+            <table class="data-table" id="farmerTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>District</th>
+                  <th>Aadhaar</th>
+                  <th>Land (Ha)</th>
+                  <th>Crop</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="farmerTbody">
+                <tr><td colspan="8" style="text-align:center;opacity:.5;padding:2rem;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ LAND RECORDS ═══════════════ -->
+      <section id="page-land" class="page">
+        <div class="section-head">
+          <div class="section-title">Land Records</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Land Parcel</button>
+        </div>
+        <div class="search-bar">
+          <div class="search-icon" style="flex: 1">
+            <input type="text" id="landSearch" placeholder="Search by survey no, farmer name or village..." />
+          </div>
+          <select id="landTypeFilter">
+            <option value="">All Land Types</option>
+            <option>Irrigated</option>
+            <option>Rain-fed</option>
+            <option>Dry Land</option>
+            <option>Fallow</option>
+          </select>
+        </div>
+        <div class="data-table-wrap reveal">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Survey No.</th>
+                <th>Farmer</th>
+                <th>Village</th>
+                <th>District</th>
+                <th>Area (Ha)</th>
+                <th>Land Type</th>
+                <th>Primary Crop</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="8" style="text-align:center;opacity:.5;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══════════════ LAND MODAL ═══════════════ -->
+      <div class="modal-overlay" id="landModal">
+        <div class="modal-box">
+          <div class="modal-title" id="landModalTitle">Add Land Parcel</div>
+          <div class="form-grid modal-grid">
+            <div class="form-group">
+              <label>Survey Number <span class="required-star">*</span></label>
+              <input type="text" id="modalSurveyNo" placeholder="e.g. 220/B" />
+            </div>
+            <div class="form-group">
+              <label>Farmer Name</label>
+              <input type="text" id="modalFarmerName" placeholder="Search farmer..." />
+            </div>
+            <div class="form-group">
+              <label>Area (Hectares)</label>
+              <input type="number" id="modalArea" placeholder="e.g. 3.5" />
+            </div>
+            <div class="form-group">
+              <label>Village</label>
+              <input type="text" id="modalVillage" placeholder="e.g. Borkhedi" />
+            </div>
+            <div class="form-group">
+              <label>District</label>
+              <select id="modalDistrict">
+                <option value="">Select District</option>
+                <option>Nagpur</option>
+                <option>Pune</option>
+                <option>Nashik</option>
+                <option>Amravati</option>
+                <option>Kolhapur</option>
+                <option>Aurangabad</option>
+                <option>Latur</option>
+                <option>Solapur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Land Type</label>
+              <select id="modalLandType">
+                <option>Irrigated</option>
+                <option>Rain-fed</option>
+                <option>Dry Land</option>
+                <option>Fallow</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Primary Crop</label>
+              <input type="text" id="modalPrimaryCrop" placeholder="e.g. Soybean" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="landModalSaveBtn" onclick="saveLandParcel()">Save Parcel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ SCHEMES ═══════════════ -->
+      <section id="page-schemes" class="page">
+        <div class="section-head scheme-head">
+          <div class="section-title">Beneficiary Schemes</div>
+          <div class="inline-controls">
+            <select id="schemeCategoryFilter">
+              <option value="">All Categories</option>
+              <option>Central Govt</option>
+              <option>State Govt</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="openSchemeModal()">+ Add Scheme</button>
+          </div>
+        </div>
+        <div class="scheme-grid">
+          <div style="text-align:center;opacity:.5;padding:3rem;grid-column:1/-1;">Loading schemes...</div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ ADD SCHEME MODAL ═══════════════ -->
+      <div class="modal-overlay" id="schemeModal">
+        <div class="modal-box">
+          <div class="modal-title">Add New Scheme</div>
+          <div class="form-grid modal-grid">
+            <div class="form-group span2">
+              <label>Scheme Name <span class="required-star">*</span></label>
+              <input type="text" id="newSchemeName" placeholder="e.g. PM-KISAN Samman Nidhi" />
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <input type="text" id="newSchemeDept" placeholder="e.g. Ministry of Agriculture" />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="newSchemeCategory">
+                <option>Central Govt</option>
+                <option>State Govt</option>
+              </select>
+            </div>
+            <div class="form-group span2">
+              <label>Description</label>
+              <input type="text" id="newSchemeDesc" placeholder="Brief description of the scheme" />
+            </div>
+            <div class="form-group span2">
+              <label>Tags (comma-separated)</label>
+              <input type="text" id="newSchemeTags" placeholder="e.g. Rs. 6,000/year, All Farmers" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-secondary" onclick="closeSchemeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveNewScheme()">Save Scheme</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ REPORTS ═══════════════ -->
+      <section id="page-reports" class="page">
+        <div class="section-title">Analytics and Reports</div>
+
+        <div class="report-grid">
+          <div class="stat-card reveal">
+            <div class="stat-icon">TR</div>
+            <div class="stat-label">Total Registrations</div>
+            <div class="stat-value" id="report-total-registrations" data-count="0">0</div>
+            <div class="stat-change">FY 2024-25</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon">TA</div>
+            <div class="stat-label">Total Land Area</div>
+            <div class="stat-value" id="report-total-land-area" data-count="0" data-suffix=" Ha">0 Ha</div>
+            <div class="stat-change">Across 8 districts</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon">BE</div>
+            <div class="stat-label">Beneficiary Enrollments</div>
+            <div class="stat-value" id="report-beneficiaries" data-count="0">0</div>
+            <div class="stat-change">Across all schemes</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="bar-chart-wrap reveal" id="districtChart">
+            <div class="bar-chart-title">Farmers by District</div>
+            <div class="bar-row"><div class="bar-label">Nagpur</div><div class="bar-track"><div class="bar-fill" style="width: 72%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Pune</div><div class="bar-track"><div class="bar-fill" style="width: 55%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Nashik</div><div class="bar-track"><div class="bar-fill" style="width: 48%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Amravati</div><div class="bar-track"><div class="bar-fill amber" style="width: 40%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Kolhapur</div><div class="bar-track"><div class="bar-fill amber" style="width: 36%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Others</div><div class="bar-track"><div class="bar-fill earth" style="width: 20%"></div></div><div class="bar-val">-</div></div>
+          </div>
+
+          <div class="bar-chart-wrap reveal" id="schemeChart">
+            <div class="bar-chart-title">Scheme Enrollment Status</div>
+            <div class="bar-row"><div class="bar-label">PM-KISAN</div><div class="bar-track"><div class="bar-fill" style="width: 57%"></div></div><div class="bar-val">57%</div></div>
+            <div class="bar-row"><div class="bar-label">PMFBY</div><div class="bar-track"><div class="bar-fill amber" style="width: 33%"></div></div><div class="bar-val">33%</div></div>
+            <div class="bar-row"><div class="bar-label">Soil Card</div><div class="bar-track"><div class="bar-fill earth" style="width: 77%"></div></div><div class="bar-val">77%</div></div>
+            <div class="bar-row"><div class="bar-label">KCC</div><div class="bar-track"><div class="bar-fill" style="width: 27%"></div></div><div class="bar-val">27%</div></div>
+            <div class="bar-row"><div class="bar-label">PMKSY</div><div class="bar-track"><div class="bar-fill amber" style="width: 15%"></div></div><div class="bar-val">15%</div></div>
+            <div class="bar-row"><div class="bar-label">eNAM</div><div class="bar-track"><div class="bar-fill" style="width: 22%"></div></div><div class="bar-val">22%</div></div>
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <button class="btn btn-primary" onclick="exportPDFReport()">Export PDF Report</button>
+          <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+          <button class="btn btn-secondary" onclick="emailReport()">Email Report</button>
+        </div>
+      </section>
+    </main>
+
+    <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top">Top</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
