@@ -14,6 +14,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/krishi
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'store.json');
 const STORE_KEY = 'primary';
+let dbConnectPromise = null;
 
 app.use(cors());
 app.use(express.json());
@@ -167,8 +168,6 @@ function createSeedData() {
 }
 
 async function loadInitialData() {
-  await fsp.mkdir(DATA_DIR, { recursive: true });
-
   if (fs.existsSync(DATA_FILE)) {
     const raw = await fsp.readFile(DATA_FILE, 'utf8');
     if (raw.trim()) {
@@ -180,6 +179,8 @@ async function loadInitialData() {
 }
 
 async function ensureStoreDocument() {
+  await connectDatabase();
+
   let store = await Store.findOne({ key: STORE_KEY }).lean();
   if (store) {
     return withDefaults(store);
@@ -828,8 +829,26 @@ app.get('*', (req, res) => {
 });
 
 async function connectDatabase() {
-  await mongoose.connect(MONGODB_URI);
-  await ensureStoreDocument();
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  if (dbConnectPromise) {
+    await dbConnectPromise;
+    return;
+  }
+
+  if (process.env.VERCEL && !process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI is required in Vercel project settings.');
+  }
+
+  dbConnectPromise = mongoose.connect(MONGODB_URI)
+    .then(() => undefined)
+    .finally(() => {
+      dbConnectPromise = null;
+    });
+
+  await dbConnectPromise;
 }
 
 function startServer(port) {
@@ -851,9 +870,14 @@ function startServer(port) {
   });
 }
 
-connectDatabase()
-  .then(() => startServer(DEFAULT_PORT))
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB:', err);
-    process.exit(1);
-  });
+if (process.env.VERCEL) {
+  module.exports = app;
+} else {
+  connectDatabase()
+    .then(() => ensureStoreDocument())
+    .then(() => startServer(DEFAULT_PORT))
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB:', err);
+      process.exit(1);
+    });
+}
