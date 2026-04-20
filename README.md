@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # KrishiSeva
 
 A full-stack web application for managing farmer registrations, land records, scheme enrollments, and district-level analytics.
@@ -98,3 +99,6 @@ npm start
 - `GET /api/activity`
 - `GET /api/reports/summary`
 - `GET /api/health`
+=======
+# Krishi-Seva
+>>>>>>> 6f57b730b667632647501670d99f39feae526790
