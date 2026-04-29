@@ -6,10 +6,127 @@
   <meta name="theme-color" content="#1a3d2b" />
   <title>KrishiSeva - Agricultural Data Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="app-shell">
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-stage">
+      <div class="auth-showcase">
+        <div class="auth-topbar">
+          <div class="eyebrow">Secure field operations</div>
+          <button class="theme-toggle auth-theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+            <span class="theme-toggle-track">
+              <span class="theme-toggle-thumb"></span>
+            </span>
+            <span class="theme-toggle-label">Dark mode</span>
+          </button>
+        </div>
+        <h1 class="auth-title">Login and signup for the KrishiSeva control room.</h1>
+        <p class="auth-copy">
+          Create a portal user, sign in securely, and continue into the farmer, land, scheme, and reporting workflows.
+        </p>
+
+        <div class="auth-metrics">
+          <div class="auth-metric-card">
+            <span>Validated inputs</span>
+            <strong>Express Validator</strong>
+          </div>
+          <div class="auth-metric-card">
+            <span>Password security</span>
+            <strong>Salted hashing</strong>
+          </div>
+          <div class="auth-metric-card">
+            <span>Portal access</span>
+            <strong>Session token flow</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-panel">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+          <button class="auth-tab active" type="button" data-auth-target="loginPanel">Login</button>
+          <button class="auth-tab" type="button" data-auth-target="signupPanel">Create Account</button>
+        </div>
+
+        <div id="loginPanel" class="auth-form-panel active">
+          <div class="auth-panel-header">
+            <h2>Welcome back</h2>
+            <p>Use your email and password to open the dashboard.</p>
+          </div>
+
+          <form id="loginForm" class="auth-form" novalidate>
+            <div class="auth-status" id="loginStatus" aria-live="polite"></div>
+
+            <div class="form-group">
+              <label for="loginEmail">Email Address</label>
+              <input type="email" id="loginEmail" name="email" placeholder="name@krishiseva.in" autocomplete="email" />
+              <div class="field-error" data-error-for="email"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <div class="password-field">
+                <input type="password" id="loginPassword" name="password" placeholder="Enter password" autocomplete="current-password" />
+                <button class="password-toggle" type="button" data-password-toggle="loginPassword">Show</button>
+              </div>
+              <div class="field-error" data-error-for="password"></div>
+            </div>
+
+            <button class="btn btn-primary auth-submit" type="submit">Login to Dashboard</button>
+          </form>
+        </div>
+
+        <div id="signupPanel" class="auth-form-panel">
+          <div class="auth-panel-header">
+            <h2>Create a new user</h2>
+            <p>Register a portal account, then you will be signed in automatically.</p>
+          </div>
+
+          <form id="signupForm" class="auth-form" novalidate>
+            <div class="auth-status" id="signupStatus" aria-live="polite"></div>
+
+            <div class="form-group">
+              <label for="signupName">Full Name</label>
+              <input type="text" id="signupName" name="name" placeholder="e.g. Asha Verma" autocomplete="name" />
+              <div class="field-error" data-error-for="name"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupEmail">Email Address</label>
+              <input type="email" id="signupEmail" name="email" placeholder="name@krishiseva.in" autocomplete="email" />
+              <div class="field-error" data-error-for="email"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <div class="password-field">
+                <input type="password" id="signupPassword" name="password" placeholder="Minimum 8 characters" autocomplete="new-password" />
+                <button class="password-toggle" type="button" data-password-toggle="signupPassword">Show</button>
+              </div>
+              <div class="password-meter">
+                <span id="passwordStrengthFill"></span>
+              </div>
+              <div class="password-hint" id="passwordHint">Use letters, numbers, and at least 8 characters.</div>
+              <div class="field-error" data-error-for="password"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupConfirmPassword">Confirm Password</label>
+              <div class="password-field">
+                <input type="password" id="signupConfirmPassword" name="confirmPassword" placeholder="Re-enter password" autocomplete="new-password" />
+                <button class="password-toggle" type="button" data-password-toggle="signupConfirmPassword">Show</button>
+              </div>
+              <div class="field-error" data-error-for="confirmPassword"></div>
+            </div>
+
+            <button class="btn btn-amber auth-submit" type="submit">Create User and Continue</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="app-shell" hidden>
     <div class="bg-orb orb-one"></div>
     <div class="bg-orb orb-two"></div>
     <div class="bg-grid"></div>
@@ -31,15 +148,27 @@
       <div class="nav-right">
         <div class="nav-presence">
           <span class="presence-dot"></span>
-          <span id="liveClock">Syncing...</span>
+          <div class="presence-copy">
+            <span class="presence-label">Live sync</span>
+            <span id="liveClock">Syncing...</span>
+          </div>
         </div>
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
           <span class="theme-toggle-track">
             <span class="theme-toggle-thumb"></span>
           </span>
           <span class="theme-toggle-label">Dark mode</span>
         </button>
-        <div class="badge-user" title="Admin">AD</div>
+        <div class="user-chip" title="Signed in user">
+          <div class="badge-user">KS</div>
+          <div class="user-copy">
+            <strong id="authUserName">Portal User</strong>
+            <span id="authUserEmail">Signed in</span>
+            <span id="authUserScope">All states and districts</span>
+            <span id="authUserRole" class="user-role-badge" hidden>Admin</span>
+          </div>
+        </div>
+        <button id="logoutButton" class="btn btn-secondary btn-sm" type="button">Logout</button>
       </div>
     </nav>
 
@@ -156,6 +285,55 @@
             </div>
           </div>
         </div>
+
+        <div id="adminWhitelistCard" class="card reveal admin-card" hidden>
+          <div class="card-header">
+            <div>
+              <div class="card-title">Access Control</div>
+              <p class="admin-subcopy">Approve emails, assign sub-admin roles, and restrict them to selected states and districts.</p>
+            </div>
+          </div>
+
+          <form id="whitelistForm" class="admin-form" novalidate>
+            <input type="hidden" id="whitelistEditEmail" />
+            <div class="form-group">
+              <label for="whitelistEmail">Approved email</label>
+              <input type="email" id="whitelistEmail" placeholder="name@example.com" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label for="whitelistRole">Access role</label>
+              <select id="whitelistRole">
+                <option value="user">User</option>
+                <option value="sub-admin">Sub Admin</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="whitelistState">State</label>
+              <select id="whitelistState">
+                <option value="">Select State</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="whitelistDistricts">Districts</label>
+              <select id="whitelistDistricts" multiple size="6"></select>
+            </div>
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div class="access-form-actions">
+                <button class="btn btn-primary btn-sm" id="whitelistSubmitButton" type="submit">Save Access</button>
+                <button class="btn btn-secondary btn-sm" id="whitelistCancelButton" type="button" hidden>Cancel</button>
+              </div>
+            </div>
+            <div class="field-error admin-form-error" id="whitelistFieldError"></div>
+          </form>
+
+          <div class="admin-list-head">
+            <strong>Approved users</strong>
+            <span id="whitelistCount">0 access entries</span>
+          </div>
+          <div id="whitelistEmptyState" class="admin-empty-state">No approved emails yet.</div>
+          <div id="whitelistList" class="admin-list"></div>
+        </div>
       </section>
 
       <!-- ═══════════════ FARMERS ═══════════════ -->
@@ -234,27 +412,15 @@
                   <input type="text" id="village" placeholder="Village or locality name" />
                 </div>
                 <div class="form-group">
-                  <label>District <span class="required-star">*</span></label>
-                  <select id="district">
-                    <option value="">Select District</option>
-                    <option>Nagpur</option>
-                    <option>Pune</option>
-                    <option>Nashik</option>
-                    <option>Amravati</option>
-                    <option>Kolhapur</option>
-                    <option>Aurangabad</option>
-                    <option>Latur</option>
-                    <option>Solapur</option>
+                  <label>State <span class="required-star">*</span></label>
+                  <select id="state">
+                    <option value="">Select State</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label>State</label>
-                  <select id="state">
-                    <option>Maharashtra</option>
-                    <option>Madhya Pradesh</option>
-                    <option>Uttar Pradesh</option>
-                    <option>Punjab</option>
-                    <option>Haryana</option>
+                  <label>District <span class="required-star">*</span></label>
+                  <select id="district">
+                    <option value="">Select District</option>
                   </select>
                 </div>
               </div>
@@ -368,13 +534,11 @@
             <div class="search-icon" style="flex: 1">
               <input type="text" id="farmerSearch" placeholder="Search by name, district or Aadhaar..." oninput="filterFarmers()" />
             </div>
+            <select id="stateFilter" onchange="filterFarmers()">
+              <option value="">All States</option>
+            </select>
             <select id="districtFilter" onchange="filterFarmers()">
               <option value="">All Districts</option>
-              <option>Nagpur</option>
-              <option>Pune</option>
-              <option>Nashik</option>
-              <option>Amravati</option>
-              <option>Kolhapur</option>
             </select>
             <button class="btn btn-primary btn-sm" onclick="showPage('farmers', document.querySelector('.nav-links button:nth-child(2)')); switchTab('farmers', 'tab-register', document.querySelector('.tab-btn'))">+ Add New</button>
           </div>
@@ -461,17 +625,15 @@
               <input type="text" id="modalVillage" placeholder="e.g. Borkhedi" />
             </div>
             <div class="form-group">
+              <label>State</label>
+              <select id="modalState">
+                <option value="">Select State</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label>District</label>
               <select id="modalDistrict">
                 <option value="">Select District</option>
-                <option>Nagpur</option>
-                <option>Pune</option>
-                <option>Nashik</option>
-                <option>Amravati</option>
-                <option>Kolhapur</option>
-                <option>Aurangabad</option>
-                <option>Latur</option>
-                <option>Solapur</option>
               </select>
             </div>
             <div class="form-group">
@@ -551,26 +713,121 @@
 
       <!-- ═══════════════ REPORTS ═══════════════ -->
       <section id="page-reports" class="page">
-        <div class="section-title">Analytics and Reports</div>
+        <div class="reports-hero reveal">
+          <div class="reports-hero-copy">
+            <div class="eyebrow">Analytics control room</div>
+            <div class="reports-hero-title">Analytics and Reports</div>
+            <div class="reports-hero-text">
+              Track growth, regional concentration, land usage, and scheme momentum across every visible state and district.
+            </div>
+          </div>
+          <div class="reports-hero-badges">
+            <div class="reports-badge">
+              <span>Scope</span>
+              <strong id="reportScopeLabel">All states and districts</strong>
+            </div>
+            <div class="reports-badge">
+              <span>Top district</span>
+              <strong id="reportTopDistrict">Loading...</strong>
+            </div>
+            <div class="reports-badge">
+              <span>Best scheme</span>
+              <strong id="reportTopScheme">Loading...</strong>
+            </div>
+          </div>
+        </div>
 
-        <div class="report-grid">
-          <div class="stat-card reveal">
+        <div class="report-grid report-grid-rich">
+          <div class="stat-card reveal stat-card-forest">
             <div class="stat-icon">TR</div>
             <div class="stat-label">Total Registrations</div>
             <div class="stat-value" id="report-total-registrations" data-count="0">0</div>
-            <div class="stat-change">FY 2024-25</div>
+            <div class="stat-change" id="reportRegistrationsNote">Visible in your scope</div>
           </div>
-          <div class="stat-card reveal">
+          <div class="stat-card reveal stat-card-sunrise">
             <div class="stat-icon">TA</div>
             <div class="stat-label">Total Land Area</div>
             <div class="stat-value" id="report-total-land-area" data-count="0" data-suffix=" Ha">0 Ha</div>
-            <div class="stat-change">Across 8 districts</div>
+            <div class="stat-change" id="reportLandNote">Across visible districts</div>
           </div>
-          <div class="stat-card reveal">
+          <div class="stat-card reveal stat-card-river">
             <div class="stat-icon">BE</div>
             <div class="stat-label">Beneficiary Enrollments</div>
             <div class="stat-value" id="report-beneficiaries" data-count="0">0</div>
-            <div class="stat-change">Across all schemes</div>
+            <div class="stat-change" id="reportBeneficiaryNote">Across visible schemes</div>
+          </div>
+          <div class="stat-card reveal stat-card-earth">
+            <div class="stat-icon">AV</div>
+            <div class="stat-label">Avg Land Per Farmer</div>
+            <div class="stat-value" id="report-avg-land" data-count="0" data-suffix=" Ha">0 Ha</div>
+            <div class="stat-change" id="reportAvgLandNote">Calculated from visible records</div>
+          </div>
+          <div class="stat-card reveal stat-card-berry">
+            <div class="stat-icon">DS</div>
+            <div class="stat-label">District Coverage</div>
+            <div class="stat-value" id="report-district-coverage" data-count="0">0</div>
+            <div class="stat-change" id="reportDistrictCoverageNote">Districts with farmer data</div>
+          </div>
+          <div class="stat-card reveal stat-card-amberglass">
+            <div class="stat-icon">PD</div>
+            <div class="stat-label">Pending Farmers</div>
+            <div class="stat-value" id="report-pending-farmers" data-count="0">0</div>
+            <div class="stat-change" id="reportPendingNote">Need follow-up review</div>
+          </div>
+        </div>
+
+        <div class="report-spotlight-grid section-gap">
+          <div class="report-spotlight reveal">
+            <div class="report-spotlight-head">
+              <span class="report-spotlight-kicker">Regional highlight</span>
+              <strong id="spotlightTitle">Loading insight...</strong>
+            </div>
+            <p id="spotlightBody">We are calculating the strongest geography and registration concentration in your visible records.</p>
+            <div class="report-mini-stats">
+              <div class="report-mini-stat">
+                <span>Top state share</span>
+                <strong id="spotlightStateShare">0%</strong>
+              </div>
+              <div class="report-mini-stat">
+                <span>Pending ratio</span>
+                <strong id="spotlightPendingRatio">0%</strong>
+              </div>
+              <div class="report-mini-stat">
+                <span>Enrollment intensity</span>
+                <strong id="spotlightEnrollmentRatio">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-insight-card reveal">
+            <div class="report-insight-head">
+              <div class="card-title">Quick Breakdown</div>
+              <span class="report-insight-chip">Live scope</span>
+            </div>
+            <div class="report-donut-row">
+              <div class="report-donut">
+                <div class="report-donut-ring" id="pendingDonutRing">
+                  <div class="report-donut-core">
+                    <strong id="pendingDonutValue">0%</strong>
+                    <span>Pending</span>
+                  </div>
+                </div>
+              </div>
+              <div class="report-donut-legend" id="reportLegendList">
+                <div class="report-legend-item">
+                  <span class="legend-swatch forest"></span>
+                  <div><strong>Active</strong><span>0 farmers</span></div>
+                </div>
+                <div class="report-legend-item">
+                  <span class="legend-swatch amber"></span>
+                  <div><strong>Approved</strong><span>0 farmers</span></div>
+                </div>
+                <div class="report-legend-item">
+                  <span class="legend-swatch earth"></span>
+                  <div><strong>Pending</strong><span>0 farmers</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -596,6 +853,54 @@
           </div>
         </div>
 
+        <div class="two-col section-gap">
+          <div class="bar-chart-wrap reveal" id="stateChart">
+            <div class="bar-chart-title">Farmers by State</div>
+            <div class="bar-row"><div class="bar-label">Maharashtra</div><div class="bar-track"><div class="bar-fill" style="width: 72%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Punjab</div><div class="bar-track"><div class="bar-fill amber" style="width: 42%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Haryana</div><div class="bar-track"><div class="bar-fill earth" style="width: 34%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Uttar Pradesh</div><div class="bar-track"><div class="bar-fill" style="width: 25%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Madhya Pradesh</div><div class="bar-track"><div class="bar-fill amber" style="width: 18%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Others</div><div class="bar-track"><div class="bar-fill earth" style="width: 10%"></div></div><div class="bar-val">-</div></div>
+          </div>
+
+          <div class="bar-chart-wrap reveal" id="statusChart">
+            <div class="bar-chart-title">Farmer Status Breakdown</div>
+            <div class="bar-row"><div class="bar-label">Active</div><div class="bar-track"><div class="bar-fill" style="width: 60%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Approved</div><div class="bar-track"><div class="bar-fill amber" style="width: 40%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Pending</div><div class="bar-track"><div class="bar-fill earth" style="width: 30%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Review</div><div class="bar-track"><div class="bar-fill" style="width: 20%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Hold</div><div class="bar-track"><div class="bar-fill amber" style="width: 15%"></div></div><div class="bar-val">-</div></div>
+            <div class="bar-row"><div class="bar-label">Others</div><div class="bar-track"><div class="bar-fill earth" style="width: 10%"></div></div><div class="bar-val">-</div></div>
+          </div>
+        </div>
+
+        <div class="two-col section-gap">
+          <div class="report-list-card reveal">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Top Performing Districts</div>
+                <p class="admin-subcopy">Highest farmer concentration in the visible data set.</p>
+              </div>
+            </div>
+            <div id="topDistrictList" class="report-rank-list">
+              <div class="report-rank-item"><span>Loading...</span></div>
+            </div>
+          </div>
+
+          <div class="report-list-card reveal">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Top Schemes by Reach</div>
+                <p class="admin-subcopy">Farmer participation compared against visible registrations.</p>
+              </div>
+            </div>
+            <div id="topSchemeList" class="report-rank-list">
+              <div class="report-rank-item"><span>Loading...</span></div>
+            </div>
+          </div>
+        </div>
+
         <div class="report-actions">
           <button class="btn btn-primary" onclick="exportPDFReport()">Export PDF Report</button>
           <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
@@ -607,8 +912,8 @@
     <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top">Top</button>
   </div>
 
-  <script src="data.js"></script>
-  <script src="api.js"></script>
-  <script src="script.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,32 @@
+[
+  {
+    "email": "ankitkr38203@gmail.com",
+    "role": "user",
+    "state": "",
+    "districts": []
+  },
+  {
+    "email": "sujalmankotia15@gmail.com",
+    "role": "admin",
+    "state": "",
+    "districts": []
+  },
+  {
+    "email": "sujalmnakotia051@gmail.com",
+    "role": "sub-admin",
+    "state": "Punjab",
+    "districts": [
+      "Amritsar",
+      "Patiala"
+    ]
+  },
+  {
+    "email": "sujalmankotia051@gmail.com",
+    "role": "sub-admin",
+    "state": "Punjab",
+    "districts": [
+      "Amritsar",
+      "Patiala"
+    ]
+  }
+]

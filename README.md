@@ -1,17 +1,48 @@
-<<<<<<< HEAD
 # KrishiSeva
 
-A full-stack web application for managing farmer registrations, land records, scheme enrollments, and district-level analytics.
+KrishiSeva is a full-stack web application for managing farmer registrations, land records, scheme enrollments, and district-level analytics.
 
 ## Stack
 
-| Layer | Technology |
-| --- | --- |
-| Frontend | HTML / CSS / JavaScript |
-| Backend | Node.js + Express |
-| Database | MongoDB Atlas or any MongoDB instance |
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js, Express
+- Database: MongoDB
 
-## Local Setup
+## Folder map
+
+```text
+krishiseva/
+|-- data/
+|   `-- store.json
+|-- docs/
+|   `-- PROJECT_STRUCTURE.md
+|-- public/
+|   |-- css/
+|   |   `-- styles.css
+|   |-- js/
+|   |   |-- api.js
+|   |   |-- app.js
+|   |   `-- data.js
+|   `-- index.html
+|-- src/
+|   `-- server/
+|       `-- index.js
+|-- .env.example
+|-- package.json
+|-- render.yaml
+`-- server.js
+```
+
+## What lives where
+
+- `public/index.html`: page structure and section layout
+- `public/css/styles.css`: full UI styling
+- `public/js/app.js`: page behavior, rendering, forms, tables, reports
+- `public/js/api.js`: API calls to the backend
+- `src/server/index.js`: Express server, MongoDB setup, seed loading, API routes
+- `data/store.json`: startup seed data for empty databases
+
+## Local setup
 
 1. Install dependencies:
 
@@ -19,15 +50,15 @@ A full-stack web application for managing farmer registrations, land records, sc
 npm install
 ```
 
-2. Create your environment file:
+2. Create `.env` from the example:
 
 ```bash
 copy .env.example .env
 ```
 
-3. Add your MongoDB connection string to `.env` or set `MONGODB_URI` in your shell.
+3. Set `MONGODB_URI` in `.env`.
 
-4. Start the server:
+4. Start the app:
 
 ```bash
 npm start
@@ -35,70 +66,8 @@ npm start
 
 5. Open `http://localhost:3000`
 
-## MongoDB Migration
+## Notes
 
-This project now stores app data in MongoDB.
-
-On the first run against an empty database, the server will:
-
-- import existing data from `data/store.json` if that file exists
-- otherwise create default seed data
-
-That means your current local records can be pushed into MongoDB just by starting the app with a valid `MONGODB_URI`.
-
-## Deploy
-
-You can deploy this on Render, Railway, Cyclic, or any Node host.
-
-Set these environment variables in your hosting dashboard:
-
-- `MONGODB_URI`
-- `PORT` if your host requires it
-
-Build/start command:
-
-```bash
-npm start
-```
-
-## MongoDB Atlas Steps
-
-1. Create a free cluster in MongoDB Atlas.
-2. Create a database user.
-3. In Network Access, allow your deployment platform IPs, or use `0.0.0.0/0` while testing.
-4. Copy the connection string.
-5. Replace the placeholder values in `.env` or in your hosting provider environment settings.
-6. Run the app once to import `data/store.json` into MongoDB.
-
-## API
-
-### Farmers
-
-- `GET /api/farmers`
-- `GET /api/farmers/stats`
-- `POST /api/farmers`
-- `PUT /api/farmers/:id`
-- `DELETE /api/farmers/:id`
-
-### Land Records
-
-- `GET /api/land`
-- `GET /api/land/:id`
-- `POST /api/land`
-- `PUT /api/land/:id`
-- `DELETE /api/land/:id`
-
-### Schemes
-
-- `GET /api/schemes`
-- `POST /api/schemes`
-- `POST /api/schemes/:id/enroll`
-
-### Activity and Reports
-
-- `GET /api/activity`
-- `GET /api/reports/summary`
-- `GET /api/health`
-=======
-# Krishi-Seva
->>>>>>> 6f57b730b667632647501670d99f39feae526790
+- If MongoDB is empty, the app imports `data/store.json` on first run.
+- `server.js` is only a thin entrypoint. Most backend work is in `src/server/index.js`.
+- The old `krishiseva.db` file is still in the repo, but the current app flow uses MongoDB.
